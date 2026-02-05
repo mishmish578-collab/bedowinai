@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BedowinAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="
+  font-family: Arial, sans-serif;
+  background:#0f172a;
+  color:#f8fafc;
+  margin:0;
+  padding:20px;
+">
+
+<h2 style="text-align:center;">🌵 BedowinAI</h2>
+
+<div id="chat" style="
+  max-width:600px;
+  margin:0 auto 20px;
+  padding:10px;
+  background:#020617;
+  border-radius:10px;
+  min-height:300px;
+  overflow-y:auto;
+"></div>
+
+<div style="max-width:600px;margin:0 auto;display:flex;gap:10px;">
+  <input id="message" placeholder="Ask BedowinAI..."
+    style="flex:1;padding:10px;border-radius:8px;border:none;" />
+  <button onclick="sendMessage()"
+    style="padding:10px 20px;border-radius:8px;border:none;background:#22c55e;">
+    Send
+  </button>
+</div>
+
+<script>
+async function sendMessage() {
+  const input = document.getElementById("message");
+  const chat = document.getElementById("chat");
+  const text = input.value.trim();
+  if (!text) return;
+
+  chat.innerHTML += `<p><b>You:</b> ${text}</p>`;
+  input.value = "";
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  });
+
+  const data = await res.json();
+  chat.innerHTML += `<p><b>BedowinAI:</b> ${data.reply}</p>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
